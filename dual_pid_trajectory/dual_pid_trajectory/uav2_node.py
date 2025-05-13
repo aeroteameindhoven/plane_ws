@@ -261,7 +261,9 @@ class UAVFollower(Node):
                 f"Throttle: {throttle_cmd:4.2f}  |  "
                 f"Pitch: {math.degrees(pitch_cmd):6.2f}°  |  "
                 f"Lateral: {lateral_error:6.2f} m  |  "
-                f"Roll: {math.degrees(roll_cmd):6.2f}°"
+                f"Roll: {math.degrees(roll_cmd):6.2f}° |  " 
+                f"Target Atitude: {self.fixed_altitude:5.2f} m  |  "
+                f"Target Distance: {self.target_distance:5.2f} m  |  "
             )
             self.get_logger().info(log_msg)
             time.sleep(0.01)
