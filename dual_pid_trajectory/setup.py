@@ -16,7 +16,6 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            'uav1_node = dual_pid_trajectory.uav1_node:main',
             'uav2_node = dual_pid_trajectory.uav2_node:main',
         ],
     },
