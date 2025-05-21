@@ -95,7 +95,6 @@ class GpsFollower(Node):
         self.log_altitude = []
         self.log_lateral_offset = []
         self.log_tag_height = []  # CV-estimated height from tag (pose.position.y)
-        self.run_duration = 1500.0  # seconds
 
         self.base_throttle = 0.55
         self.uav_was_ahead = False
@@ -369,11 +368,6 @@ class GpsFollower(Node):
                 lateral_error = self.lateral_offset_error(self.last_lat, self.last_lon, self.last_car_heading, self.uav_lat, self.uav_lon)
                 altitude_error = self.fixed_altitude - (self.vehicle.location.global_relative_frame.alt or 0.0)
             self.prev_dist = dist_to_target
-
-            if elapsed > self.run_duration:
-                self.get_logger().info("✅ Run complete. Shutting down...")
-                rclpy.shutdown()
-                break
 
             # --- Target airspeed with PID ---
             target_airspeed = 16.0 + self.distance_pid.update(distance_error, dt)  # baseline matching speed
