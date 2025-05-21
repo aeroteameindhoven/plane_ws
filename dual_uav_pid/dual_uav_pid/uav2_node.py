@@ -350,11 +350,11 @@ class GpsFollower(Node):
                 if self.prev_tag_source != tag_source:
                     self.distance_pid.integral = 0.0
                     self.distance_pid.last_error = 0.0
-                lateral_error = use_pose.pose.position.x
+                lateral_error = use_pose.pose.position.y
                 if desired_height is None:
-                    altitude_error = self.fixed_altitude - (1.76 + use_pose.pose.position.y)
+                    altitude_error = self.fixed_altitude - (1.76 - use_pose.pose.position.x)
                 else:
-                    altitude_error = desired_height - use_pose.pose.position.y 
+                    altitude_error = desired_height + use_pose.pose.position.x 
                 distance_error = use_pose.pose.position.z - desired_distance
                 dist_to_target = use_pose.pose.position.z
             else:
@@ -403,7 +403,7 @@ class GpsFollower(Node):
                 self.log_roll_cmd.append(math.degrees(roll_cmd))
                 self.log_lateral_offset.append(lateral_error)
             
-            tag_height_str = f"{use_pose.pose.position.y:.2f}m" if use_pose is not None else "N/A"
+            tag_height_str = f"{-use_pose.pose.position.x:.2f}m" if use_pose is not None else "N/A"
 
             #--- Attitude Command ---#
             q = euler_to_quaternion(roll_cmd, pitch_cmd, 0.0)
