@@ -87,7 +87,7 @@ class GpsFollower(Node):
         self.distance_pid = PID(kp=0.5, ki=0.0, kd=0.0, integral_limit=5.0)
         self.lateral_pid = PID(kp=0.0013, ki=0.0014, kd=0.16, integral_limit=1.0)
     
-        self.heading_log = 0
+        self.log_heading = []
         self.log_roll_cmd = []
         self.log_time = []
         self.log_distance_error = []
@@ -402,6 +402,7 @@ class GpsFollower(Node):
                 self.log_altitude.append(altitude)
                 self.log_roll_cmd.append(math.degrees(roll_cmd))
                 self.log_lateral_offset.append(lateral_error)
+                self.log_heading.append(self.last_car_heading)
             
             tag_height_str = f"{-use_pose.pose.position.x:.2f}m" if use_pose is not None else "N/A"
 
@@ -445,7 +446,7 @@ class GpsFollower(Node):
                 f"[{tag_source}] Phase: {flight_phase} | Dist: {dist_to_target:.2f}m | TgtAS: {target_airspeed:.2f} | AS: {airspeed:.2f} | "
                 f"Alt: {altitude:.2f} | Throttle: {throttle_cmd:.2f} | Pitch(deg): {math.degrees(pitch_cmd):.2f} | "
                 f"Lateral Offset: {lateral_error:.2f}m | RollCmd: {math.degrees(roll_cmd):.2f}° | "
-                f"TagHeight: {tag_height_str} | Bearing Car: {self.heading_log:.2f}°"
+                f"TagHeight: {tag_height_str} | Bearing Car: {math.degrees(self.last_car_heading):.2f}°"
             )
             log_counter += 1
             
