@@ -235,15 +235,18 @@ class GpsFollower(Node):
             start_time = time.time()
             rate = 0.2  # 5 Hz
             while rclpy.ok():
-                if self.last_lat is not None:
+                if self.vehicle.mode.name == "GUIDED" and self.last_lat is not None:
                     elapsed = time.time() - start_time
-                    if elapsed >= 5.0:
-                        spoof_lat, spoof_lon = self.offset_gps(self.last_lat, self.last_lon, self.last_car_heading, 50.0)
-                        self.vehicle.simple_goto(LocationGlobalRelative(spoof_lat, spoof_lon, self.fixed_altitude))
+                    if elapsed >= 3.0:
+                        spoof_lat, spoof_lon = self.offset_gps(
+                            self.last_lat, self.last_lon, self.last_car_heading, 50.0)
+                        self.vehicle.simple_goto(
+                            LocationGlobalRelative(spoof_lat, spoof_lon, self.fixed_altitude))
                     else:
-                        self.vehicle.simple_goto(LocationGlobalRelative(self.last_lat, self.last_lon, self.fixed_altitude))
+                        self.vehicle.simple_goto(
+                            LocationGlobalRelative(self.last_lat, self.last_lon, self.fixed_altitude))
                 time.sleep(rate)
-
+    
         thread = threading.Thread(target=send_goto_loop)
         thread.daemon = True
         thread.start()
