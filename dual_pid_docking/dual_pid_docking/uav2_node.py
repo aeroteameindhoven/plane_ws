@@ -145,9 +145,11 @@ class GpsFollower(Node):
             lat = float(parts[0].split(':')[1].strip())
             lon = float(parts[1].split(':')[1].strip())
 
-            if len(parts) > 2 and "heading" in parts[2]:
-                heading_deg = float(parts[2].split(':')[1].strip())
-                self.last_car_heading = math.radians(heading_deg)
+            for part in parts[2:]:
+                key_value = part.strip().split(':')
+                if len(key_value) == 2 and key_value[0].strip().lower() == 'heading':
+                    heading_deg = float(key_value[1].strip())
+                    self.last_car_heading = math.radians(heading_deg)
 
             if self.last_lat is not None:
                 self.target_lat = 0.8 * self.last_lat + 0.2 * lat
